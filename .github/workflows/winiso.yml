@@ -20,5 +20,13 @@ jobs:
 
       - run: (Get-Content uup_download_windows.cmd -Encoding UTF8) | foreach { $_ -replace "powershell","pwsh" } | Set-Content uup_download_windows.cmd -Encoding UTF8
 
-      - run: cat uup_download_windows.cmd
-    
+      - run: cmd uup_download_windows.cmd
+
+      - run: split -b 1950M -d *.ISO WIN11.ISO
+        shell: bash
+
+      - name: Create Release
+        run: |
+          gh release create WINISO WIN11.ISO*
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
